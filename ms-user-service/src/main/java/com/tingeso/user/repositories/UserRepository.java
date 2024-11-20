@@ -1,7 +1,8 @@
-package com.example.Repositories;
+package com.tingeso.user.repositories;
 
+
+import com.tingeso.user.entities.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
-import com.example.Entities.UserEntity;
 import org.springframework.stereotype.Repository;
 
 @Repository

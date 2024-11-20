@@ -1,4 +1,4 @@
-package com.example;
+package com.tingeso.user;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -6,10 +6,10 @@ import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 
 @SpringBootApplication
 @EnableEurekaClient
-public class MsUserServiceApplication {
+public class UserApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(MsUserServiceApplication.class, args);
+		SpringApplication.run(UserApplication.class, args);
 	}
 
 }

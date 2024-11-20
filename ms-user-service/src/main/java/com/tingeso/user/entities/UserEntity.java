@@ -1,28 +1,32 @@
-package com.example.Entities;
+package com.tingeso.user.entities;
 
-import jakarta.persistence.*;
-import java.util.List;
+import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.*;
+
 @Entity
-@Table(name = "Users")
-@Data
+@Table(name = "user")
 @NoArgsConstructor
 @AllArgsConstructor
+@Data
 public class UserEntity {
     @Id
+    @NotNull
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     private String lastName;
     @Enumerated(EnumType.STRING)
     private Rol rol;
-    public enum Rol{
+
+    public enum Rol {
         CUSTOMER,
         EXECUTIVE
     }
+
     @Column(unique = true)
     private String email;
     private String password;
@@ -30,5 +34,5 @@ public class UserEntity {
     private String rut;
     private float income;
     private int age;
-
 }
+

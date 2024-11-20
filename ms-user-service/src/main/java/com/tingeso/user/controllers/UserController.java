@@ -1,7 +1,7 @@
-package com.example.Controllers;
+package com.tingeso.user.controllers;
 
-import com.example.Entities.UserEntity;
-import com.example.Services.UserService;
+import com.tingeso.user.entities.UserEntity;
+import com.tingeso.user.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

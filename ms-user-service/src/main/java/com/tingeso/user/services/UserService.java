@@ -1,22 +1,22 @@
-package com.example.Services;
+package com.tingeso.user.services;
 
-import com.example.Repositories.UserRepository;
-import com.example.Entities.UserEntity;
-import lombok.Data;
+
+import com.tingeso.user.entities.UserEntity;
+import com.tingeso.user.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.NoSuchElementException;
 
-@Data
 @Service
 public class UserService {
     @Autowired
     UserRepository userRepository;
 
-    public ArrayList<UserEntity> getUsers() {
-        return (ArrayList<UserEntity>) userRepository.findAll();
+    public List<UserEntity> getUsers() {
+        return (List<UserEntity>) userRepository.findAll();
     }
 
     public UserEntity getByEmail(String email) {

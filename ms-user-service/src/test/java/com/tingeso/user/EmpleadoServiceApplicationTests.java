@@ -1,10 +1,10 @@
-package com.example.ms_user_service;
+package com.tingeso.empleadoservice;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class MsUserServiceApplicationTests {
+class EmpleadoServiceApplicationTests {
 
 	@Test
 	void contextLoads() {
