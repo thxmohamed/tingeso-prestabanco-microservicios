@@ -21,19 +21,22 @@ spring:
             allowedMethods: "*"
             allowedHeaders: "*"
       routes:
-        - id: ms-vehicles
-          uri: lb://ms-vehicles
+        - id: ms-user
+          uri: lb://ms-user
           predicates:
-            - Path=/api/v1/vehicles/**
-        - id: ms-repairList
-          uri: lb://ms-repairList
+            - Path=/user/**
+
+        - id: ms-credit
+          uri: lb://ms-credit
           predicates:
-            - Path=/api/v1/repairList/**
-        - id: ms-repairVehicles
-          uri: lb://ms-repairVehicles
+            - Path=/credit/**
+
+        - id: ms-checkrules
+          uri: lb://ms-checkrules
           predicates:
-            - Path=/api/v1/repairs/**
-        - id: ms-reports
-          uri: lb://ms-reports
+            - Path=/checkrules/**
+
+        - id: ms-document
+          uri: lb://ms-document
           predicates:
-            - Path=/api/v1/reports/**
+            - Path=/file/**

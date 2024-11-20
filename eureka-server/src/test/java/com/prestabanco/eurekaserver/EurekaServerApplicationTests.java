@@ -1,4 +1,4 @@
-package com.autofix.eurekaserver;
+package com.prestabanco.eurekaserver;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
