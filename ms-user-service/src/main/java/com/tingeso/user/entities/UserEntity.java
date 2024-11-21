@@ -1,11 +1,9 @@
 package com.tingeso.user.entities;
 
-import com.sun.istack.NotNull;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import javax.persistence.*;
 
 @Entity
 @Table(name = "user")
@@ -14,7 +12,6 @@ import javax.persistence.*;
 @Data
 public class UserEntity {
     @Id
-    @NotNull
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;

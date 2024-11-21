@@ -1,7 +1,4 @@
 spring:
-  devtools:
-    restart:
-      aditional-paths: src/main/java
   application:
     name: ms-user-service
   cloud:
@@ -9,12 +6,9 @@ spring:
       enabled: true
       uri: http://localhost:8081
   datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/user?autorReconnect=true&allowPublicKeyRetrieval=true&useSSL=false
+    url: jdbc:mysql://localhost:3306/user
     username: root
     password: mohamed123
   jpa:
-    show-sql: true
     hibernate:
-      dialect: MySQL8Dialect
-      ddl-auto: create
+      ddl-auto: update
