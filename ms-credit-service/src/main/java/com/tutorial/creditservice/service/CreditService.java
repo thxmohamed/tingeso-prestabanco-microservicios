@@ -2,7 +2,6 @@ package com.tutorial.creditservice.service;
 
 import com.tutorial.creditservice.repository.CreditRepository;
 import com.tutorial.creditservice.entity.CreditEntity;
-import com.tutorial.creditservice.model.DocumentModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
