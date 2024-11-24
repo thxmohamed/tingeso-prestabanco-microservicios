@@ -22,22 +22,22 @@ spring:
             allowedMethods: "*"
             allowedHeaders: "*"
       routes:
-        - id: ms-user
-          uri: lb://ms-user
+        - id: ms-user-service
+          uri: lb://ms-user-service
           predicates:
             - Path=/user/**
 
-        - id: ms-credit
-          uri: lb://ms-credit
+        - id: ms-credit-service
+          uri: lb://ms-credit-service
           predicates:
             - Path=/credit/**
 
-        - id: ms-checkrules
-          uri: lb://ms-checkrules
+        - id: ms-checkrules-service
+          uri: lb://ms-checkrules-service
           predicates:
             - Path=/checkrules/**
 
-        - id: ms-document
-          uri: lb://ms-document
+        - id: ms-document-service
+          uri: lb://ms-document-service
           predicates:
             - Path=/file/**
