@@ -42,7 +42,4 @@ spring:
           predicates:
             - Path=/file/**
             
-        - id: ms-simulate-service
-          uri: lb://ms-simulate-service
-          predicates:
-            - Path=/simulate/**
+
