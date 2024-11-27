@@ -27,16 +27,6 @@ spring:
           predicates:
             - Path=/user/**
 
-        - id: ms-credit-service
-          uri: lb://ms-credit-service
-          predicates:
-            - Path=/credit/**
-
-        - id: ms-document-service
-          uri: lb://ms-document-service
-          predicates:
-            - Path=/file/**
-
         - id: ms-request-service
           uri: lb://ms-request-service
           predicates:
@@ -51,3 +41,8 @@ spring:
           uri: lb://ms-evaluation-service
           predicates:
             - Path=/checkrules/**
+
+        - id: ms-track-service
+          uri: lb://ms-track-service
+          predicates:
+            - Path=/track/**

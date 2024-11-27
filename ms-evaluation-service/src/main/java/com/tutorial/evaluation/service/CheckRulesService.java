@@ -1,6 +1,6 @@
 package com.tutorial.evaluation.service;
 
-import com.tutorial.evaluation.clients.CreditClient;
+import com.tutorial.evaluation.clients.RequestClient;
 import com.tutorial.evaluation.clients.UserClient;
 import com.tutorial.evaluation.entity.CheckRulesEntity;
 import com.tutorial.evaluation.model.CreditModel;
@@ -9,7 +9,7 @@ import com.tutorial.evaluation.repository.CheckRulesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.RestTemplate;
+
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Optional;
@@ -19,7 +19,7 @@ public class CheckRulesService {
     @Autowired
     CheckRulesRepository checkRulesRepository;
     @Autowired
-    CreditClient creditClient;
+    RequestClient requestClient;
     @Autowired
     UserClient userClient;
 
@@ -47,7 +47,7 @@ public class CheckRulesService {
         Optional<CheckRulesEntity> checkRulesOpt = checkRulesRepository.findById(checkid);
         if (checkRulesOpt.isPresent()) {
             CheckRulesEntity checkRules = checkRulesOpt.get();
-            Optional<CreditModel> creditOpt = Optional.ofNullable(creditClient.getCreditById(checkRules.getCreditID()));
+            Optional<CreditModel> creditOpt = Optional.ofNullable(requestClient.getCreditById(checkRules.getCreditID()));
             Optional<UserModel> userOpt = Optional.ofNullable(userClient.getUserById(checkRules.getClientID()));
             if (creditOpt.isPresent() && userOpt.isPresent()) {
                 CreditModel credit = creditOpt.get();
@@ -87,7 +87,7 @@ public class CheckRulesService {
         Optional<CheckRulesEntity> checkRulesOpt = checkRulesRepository.findById(checkid);
         if(checkRulesOpt.isPresent()){
             CheckRulesEntity checkRules = checkRulesOpt.get();
-            Optional<CreditModel> creditOpt = Optional.ofNullable(creditClient.getCreditById(checkRules.getCreditID()));
+            Optional<CreditModel> creditOpt = Optional.ofNullable(requestClient.getCreditById(checkRules.getCreditID()));
             Optional<UserModel> userOpt = Optional.ofNullable(userClient.getUserById(checkRules.getClientID()));
             if(userOpt.isPresent() && creditOpt.isPresent()){
                 CreditModel credit = creditOpt.get();
@@ -108,7 +108,7 @@ public class CheckRulesService {
         Optional<CheckRulesEntity> checkRulesOpt = checkRulesRepository.findById(checkid);
         if(checkRulesOpt.isPresent()){
             CheckRulesEntity checkRules = checkRulesOpt.get();
-            Optional<CreditModel> creditOpt = Optional.ofNullable(creditClient.getCreditById(checkRules.getCreditID()));
+            Optional<CreditModel> creditOpt = Optional.ofNullable(requestClient.getCreditById(checkRules.getCreditID()));
             Optional<UserModel> userOpt = Optional.ofNullable(userClient.getUserById(checkRules.getClientID()));
             if(creditOpt.isPresent() && userOpt.isPresent()){
                 UserModel user = userOpt.get();
