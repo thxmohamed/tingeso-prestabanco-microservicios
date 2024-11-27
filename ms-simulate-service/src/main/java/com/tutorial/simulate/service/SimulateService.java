@@ -12,14 +12,16 @@ public class SimulateService {
     @Autowired
     SimulateRepository simulateRepository;
 
-    public double creditSimulate(SimulateEntity credit) {
+    public int creditSimulate(SimulateEntity credit) {
         if (credit == null || credit.getInterestRate() <= 0 || credit.getYearsLimit() <= 0 || credit.getRequestedAmount() <= 0) {
             throw new IllegalArgumentException("Invalid credit data for simulation");
         }
         double interest = credit.getInterestRate() / 12 / 100;
         int months = credit.getYearsLimit() * 12;
         double amount = credit.getRequestedAmount();
-        return (amount * interest * Math.pow((1 + interest), months)) / (Math.pow(1 + interest, months) - 1);
+        double result = (amount * interest * Math.pow((1 + interest), months)) / (Math.pow(1 + interest, months) - 1);
+        return (int) Math.round(result);
     }
+
 }
 

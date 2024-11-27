@@ -15,7 +15,7 @@ public class SimulateEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private double requestedAmount;
+    private int requestedAmount;
     private int yearsLimit;
     private double interestRate;
 }
