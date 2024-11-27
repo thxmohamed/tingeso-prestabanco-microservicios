@@ -38,11 +38,6 @@ public class CreditController {
         CreditEntity credit = creditService.findCreditByID(id);
         return ResponseEntity.ok(credit);
     }
-    @PostMapping("/simulate")
-    public ResponseEntity<Double> simulateCredit(@RequestBody CreditEntity credit) {
-        double monthlyPayment = creditService.creditSimulate(credit);
-        return ResponseEntity.ok(monthlyPayment);
-    }
 
     @PutMapping("/{id}/status")
     public ResponseEntity<Void> updateCreditStatus(@PathVariable Long id, @RequestBody CreditEntity.Status status) {

@@ -32,16 +32,6 @@ public class CreditService {
         return creditRepository.findByClientID(id);
     }
 
-    public double creditSimulate(CreditEntity credit) {
-        if (credit == null || credit.getInterestRate() <= 0 || credit.getYearsLimit() <= 0 || credit.getRequestedAmount() <= 0) {
-            throw new IllegalArgumentException("Invalid credit data for simulation");
-        }
-        double interest = credit.getInterestRate() / 12 / 100;
-        int months = credit.getYearsLimit() * 12;
-        float amount = credit.getRequestedAmount();
-        return (amount * interest * Math.pow((1 + interest), months)) / (Math.pow(1 + interest, months) - 1);
-    }
-
     public CreditEntity findCreditByID(Long id) {
         if (id == null) {
             throw new IllegalArgumentException("ID cannot be null");
