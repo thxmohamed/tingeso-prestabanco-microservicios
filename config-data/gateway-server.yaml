@@ -41,3 +41,8 @@ spring:
           uri: lb://ms-document-service
           predicates:
             - Path=/file/**
+
+        - id: ms-request-service
+          uri: lb://ms-request-service
+          predicates:
+            - Path=/request/**
