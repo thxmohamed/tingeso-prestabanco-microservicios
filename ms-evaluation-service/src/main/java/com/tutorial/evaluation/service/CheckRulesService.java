@@ -1,5 +1,7 @@
 package com.tutorial.evaluation.service;
 
+import com.tutorial.evaluation.clients.CreditClient;
+import com.tutorial.evaluation.clients.UserClient;
 import com.tutorial.evaluation.entity.CheckRulesEntity;
 import com.tutorial.evaluation.model.CreditModel;
 import com.tutorial.evaluation.model.UserModel;
@@ -17,7 +19,9 @@ public class CheckRulesService {
     @Autowired
     CheckRulesRepository checkRulesRepository;
     @Autowired
-    RestTemplate restTemplate;
+    CreditClient creditClient;
+    @Autowired
+    UserClient userClient;
 
     public CheckRulesEntity createEvaluation(CheckRulesEntity checkRules) {
         if (checkRules.getCreditID() == null || checkRules.getClientID() == null) {
@@ -43,8 +47,8 @@ public class CheckRulesService {
         Optional<CheckRulesEntity> checkRulesOpt = checkRulesRepository.findById(checkid);
         if (checkRulesOpt.isPresent()) {
             CheckRulesEntity checkRules = checkRulesOpt.get();
-            Optional<CreditModel> creditOpt = Optional.ofNullable(restTemplate.getForObject("http://ms-request-service/credit/find/" + checkRules.getCreditID(), CreditModel.class));
-            Optional<UserModel> userOpt = Optional.ofNullable(restTemplate.getForObject("http://ms-user-service/" + checkRules.getClientID(), UserModel.class));
+            Optional<CreditModel> creditOpt = Optional.ofNullable(creditClient.getCreditById(checkRules.getCreditID()));
+            Optional<UserModel> userOpt = Optional.ofNullable(userClient.getUserById(checkRules.getClientID()));
             if (creditOpt.isPresent() && userOpt.isPresent()) {
                 CreditModel credit = creditOpt.get();
                 UserModel user = userOpt.get();
@@ -83,8 +87,8 @@ public class CheckRulesService {
         Optional<CheckRulesEntity> checkRulesOpt = checkRulesRepository.findById(checkid);
         if(checkRulesOpt.isPresent()){
             CheckRulesEntity checkRules = checkRulesOpt.get();
-            Optional<CreditModel> creditOpt = Optional.ofNullable(restTemplate.getForObject("http://ms-request-service/credit/find/" + checkRules.getCreditID(), CreditModel.class));
-            Optional<UserModel> userOpt = Optional.ofNullable(restTemplate.getForObject("http://ms-user-service/" + checkRules.getClientID(), UserModel.class));
+            Optional<CreditModel> creditOpt = Optional.ofNullable(creditClient.getCreditById(checkRules.getCreditID()));
+            Optional<UserModel> userOpt = Optional.ofNullable(userClient.getUserById(checkRules.getClientID()));
             if(userOpt.isPresent() && creditOpt.isPresent()){
                 CreditModel credit = creditOpt.get();
                 UserModel user = userOpt.get();
@@ -104,8 +108,8 @@ public class CheckRulesService {
         Optional<CheckRulesEntity> checkRulesOpt = checkRulesRepository.findById(checkid);
         if(checkRulesOpt.isPresent()){
             CheckRulesEntity checkRules = checkRulesOpt.get();
-            Optional<CreditModel> creditOpt = Optional.ofNullable(restTemplate.getForObject("http://ms-credit-service/credit/find/" + checkRules.getCreditID(), CreditModel.class));
-            Optional<UserModel> userOpt = Optional.ofNullable(restTemplate.getForObject("http://ms-user-service/" + checkRules.getClientID(), UserModel.class));
+            Optional<CreditModel> creditOpt = Optional.ofNullable(creditClient.getCreditById(checkRules.getCreditID()));
+            Optional<UserModel> userOpt = Optional.ofNullable(userClient.getUserById(checkRules.getClientID()));
             if(creditOpt.isPresent() && userOpt.isPresent()){
                 UserModel user = userOpt.get();
                 CreditModel credit = creditOpt.get();

@@ -10,6 +10,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CreditModel {
+    private Long id;
     private Long clientID;
     @Enumerated(EnumType.STRING)
     private LoanType loanType;

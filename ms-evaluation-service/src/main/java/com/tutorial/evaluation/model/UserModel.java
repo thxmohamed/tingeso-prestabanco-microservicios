@@ -12,6 +12,7 @@ import javax.persistence.Enumerated;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserModel {
+    private Long id;
     private String name;
     private String lastName;
     @Enumerated(EnumType.STRING)
