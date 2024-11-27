@@ -18,8 +18,17 @@ public class TrackService {
         if (id == null) {
             throw new IllegalArgumentException("Client ID cannot be null");
         }
-        return creditClient.getCreditByUserId(id);
+
+        System.out.println("Consultando créditos para el usuario con ID: " + id);
+
+        List<CreditEntity> creditEntities = creditClient.getCreditByUserId(id);
+
+        if (creditEntities == null) {
+            throw new IllegalStateException("No se encontraron créditos para el usuario con ID: " + id);
+        }
+        return creditEntities;
     }
+
 
     public CreditEntity getCreditById(Long id) {
         return creditClient.getCreditById(id);

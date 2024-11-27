@@ -17,8 +17,9 @@ public class TrackController {
     @Autowired
     TrackService trackService;
 
-    @GetMapping("/byuser/{id}")
+    @GetMapping("/byuser/{userId}")
     public ResponseEntity<List<CreditEntity>> getCreditByUserId(@PathVariable Long userId) {
+        System.out.println(userId);
         List<CreditEntity> creditEntities = trackService.getClientCredits(userId);
         return new ResponseEntity<>(creditEntities, HttpStatus.OK);
     }
