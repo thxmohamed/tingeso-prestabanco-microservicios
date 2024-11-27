@@ -32,8 +32,8 @@ spring:
           predicates:
             - Path=/credit/**
 
-        - id: ms-checkrules-service
-          uri: lb://ms-checkrules-service
+        - id: ms-evaluation-service
+          uri: lb://ms-evaluation-service
           predicates:
             - Path=/checkrules/**
 
