@@ -54,4 +54,10 @@ public class CreditController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to update observations.");
         }
     }
+
+    @PostMapping("/total")
+    public ResponseEntity<Integer> totalToPay(@RequestBody CreditEntity credit) {
+        int total = creditService.calculateTotal(credit);
+        return ResponseEntity.ok(total);
+    }
 }

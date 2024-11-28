@@ -20,7 +20,17 @@ public interface CreditRepository extends JpaRepository<CreditEntity, Long>{
     @Modifying
     @Transactional
     @Query("UPDATE CreditEntity c SET c.observations = :observations WHERE c.id = :id")
-    int updateObservations(Long id, String observations);
+    void updateObservations(Long id, String observations);
+
+    @Modifying
+    @Transactional
+    @Query("UPDATE CreditEntity c SET c.insurance = :insurance WHERE c.id = :id")
+    void updateInsurance(Long id, float insurance);
+
+    @Modifying
+    @Transactional
+    @Query("UPDATE CreditEntity c SET c.administrationCommission = :administrationCommission WHERE c.id = :id")
+    void updateAdministrationCommission(Long id, float administrationCommission);
 }
 
 

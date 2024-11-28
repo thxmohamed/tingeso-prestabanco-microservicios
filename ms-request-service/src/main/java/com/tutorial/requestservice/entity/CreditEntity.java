@@ -24,9 +24,6 @@ public class CreditEntity {
         PROPIEDADES_COMERCIALES,
         REMODELACION
     }
-    private float requestedAmount;
-    private int yearsLimit;
-    private float interestRate;
     @Enumerated(EnumType.STRING)
     private Status status;
 
@@ -41,9 +38,12 @@ public class CreditEntity {
         E8_CANCELADA_POR_CLIENTE,
         APPROVED, E9_EN_DESEMBOLSO
     };
-
+    private float requestedAmount;
+    private int yearsLimit;
+    private float interestRate;
     private int propertyValue;
     private float monthlyFee;
+    private float insurance;
     private float administrationCommission;
     private String observations;
 }

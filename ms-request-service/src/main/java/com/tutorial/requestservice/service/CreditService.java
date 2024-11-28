@@ -53,4 +53,26 @@ public class CreditService {
         }
         creditRepository.updateObservations(id, observations);
     }
+
+    public CreditEntity calculateInsurance(CreditEntity credit) {
+        float insurance = (float) (credit.getRequestedAmount() * 0.0003);
+        credit.setInsurance(insurance);
+        creditRepository.updateInsurance(credit.getId(), insurance);
+        return credit;
+    }
+
+    public CreditEntity calculateAdministration(CreditEntity credit) {
+        float administration = (float) (credit.getRequestedAmount() * 0.01);
+        credit.setAdministrationCommission(administration);
+        creditRepository.updateAdministrationCommission(credit.getId(), administration);
+        return credit;
+    }
+
+    public int calculateTotal(CreditEntity credit) {
+        credit = calculateInsurance(credit);
+        credit = calculateAdministration(credit);
+        int monthlyFee = (int) (credit.getMonthlyFee() + credit.getInsurance() + 20000);
+        int months = credit.getYearsLimit()*12;
+        return (int) (monthlyFee*months + credit.getAdministrationCommission());
+    }
 }
