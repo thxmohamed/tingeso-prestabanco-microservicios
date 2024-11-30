@@ -86,6 +86,7 @@
 				</configuration>
 			</plugin>
 		</plugins>
+		<finalName>ms-track-service</finalName>
 	</build>
 
 </project>

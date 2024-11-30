@@ -82,6 +82,7 @@
 				</configuration>
 			</plugin>
 		</plugins>
+		<finalName>ms-request-service</finalName>
 	</build>
 
 </project>
