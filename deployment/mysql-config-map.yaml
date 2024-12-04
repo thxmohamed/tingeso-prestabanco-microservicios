@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mysql-config-map
+  labels:
+    app: mysql-config-map
+data:
+  DB_HOST_USERS: user-db-service
+  DB_PORT_USERS: "3306"
+  DB_NAME_USERS: user
+  #DB_HOST_REQUEST: request-db-service
+  #DB_PORT_REQUEST: "3306"
+  #DB_NAME_REQUEST: request-db

@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ms-user-deployment
+  labels:
+    app: ms-user-deployment
+spec:
+  selector:
+    matchLabels:
+      app: ms-user-deployment
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: ms-user-deployment
+    spec:
+      containers:
+        - name: ms-user
+          image: thxmohamed/user-service
+          ports:
+            - containerPort: 8091
+          env:
+            - name: SERVER_PORT
+              value: "0" 
+            - name: DB_HOST
+              value: "user-db-service"
+            - name: DB_PORT
+              value: "3306" 
+            - name: DB_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-credentials  
+                  key: DB_NAME_User 
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-credentials  
+                  key: MYSQL_USER
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-credentials 
+                  key: MYSQL_PASSWORD
