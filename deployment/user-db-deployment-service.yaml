@@ -27,6 +27,7 @@ spec:
   resources:
     requests:
       storage: 1Gi
+
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -55,28 +56,14 @@ spec:
             - containerPort: 3306
           env:
             - name: MYSQL_ROOT_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: mysql-credentials
-                  key: MYSQL_ROOT_PASSWORD
+              value: mohamed123 
+            - name: MYSQL_DATABASE
+              value: user  
             - name: MYSQL_USER
-              valueFrom:
-                secretKeyRef:
-                  name: mysql-credentials
-                  key: MYSQL_USER
-            - name: MYSQL_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: mysql-credentials
-                  key: MYSQL_PASSWORD
-            - name: DB_NAME_User
-              valueFrom:
-                secretKeyRef:
-                  name: mysql-credentials
-                  key: DB_NAME_User
+              value: root  
           volumeMounts:
-            - mountPath: /var/lib/mysql
-              name: user-db-data
+            - name: user-db-data
+              mountPath: /var/lib/mysql
       volumes:
         - name: user-db-data
           persistentVolumeClaim:
