@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/simulate")
-@CrossOrigin("*")
 public class SimulateController {
 
     @Autowired

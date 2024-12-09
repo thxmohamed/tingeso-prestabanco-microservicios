@@ -1,6 +1,5 @@
 package com.tutorial.simulate.service;
 
-import com.tutorial.simulate.repository.SimulateRepository;
 import com.tutorial.simulate.entity.SimulateEntity;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,8 +8,6 @@ import org.springframework.stereotype.Service;
 @Data
 @Service
 public class SimulateService {
-    @Autowired
-    SimulateRepository simulateRepository;
 
     public int creditSimulate(SimulateEntity credit) {
         if (credit == null || credit.getInterestRate() <= 0 || credit.getYearsLimit() <= 0 || credit.getRequestedAmount() <= 0) {

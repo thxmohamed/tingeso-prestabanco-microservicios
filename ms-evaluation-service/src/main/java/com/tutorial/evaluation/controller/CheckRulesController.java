@@ -12,7 +12,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/checkrules")
-@CrossOrigin("*")
 public class CheckRulesController {
     @Autowired
     CheckRulesService checkRulesService;
