@@ -9,6 +9,7 @@ const CreditEvaluationP2 = () => {
   const { creditID } = useParams();
 
   const [evaluationData, setEvaluationData] = useState({
+    quoteIncomeRatioCheck: false,
     creditHistoryCheck: false,
     employmentStabilityCheck: false,
     minimumBalanceCheck: false,
@@ -16,15 +17,16 @@ const CreditEvaluationP2 = () => {
     periodicDepositsCheck: false,
     balanceYearsAgoCheck: false,
     recentWithdrawalsCheck: false,
+    currentDebtCheck: false,
+    applicantAgeCheck: false,
     currentDebt: 0.0,
   });
 
-  const updateCheck = (checkName) => {
-    setEvaluationData((prevData) => ({
-      ...prevData,
-      [checkName]: true,
-    }));
-  };
+  const [calculatedChecks, setCalculatedChecks] = useState({
+    installmentIncomeRatio: false,
+    currentDebt: false,
+    applicationAge: false,
+  });
 
   const calculateCurrentDebt = async (clientID) => {
     try {
@@ -45,7 +47,48 @@ const CreditEvaluationP2 = () => {
       return 0;
     }
   };
-  
+
+  const calculateQuotaIncome = async () => {
+    try {
+      const result = await checkrulesService.calculateQuotaIncome(creditID);
+      if (result.data) {
+        setCalculatedChecks((prev) => ({ ...prev, installmentIncomeRatio: true }));
+      }
+    } catch (error) {
+      console.error("Error al calcular relación cuota/ingreso:", error);
+    }
+  };
+
+  const calculateDebtIncome = async () => {
+    try {
+      const response = await checkrulesService.getById(creditID);
+      const debt = await calculateCurrentDebt(response.data.clientID);
+      const result = await checkrulesService.calculateDebtIncome(creditID, debt);
+      if (result.data) {
+        setCalculatedChecks((prev) => ({ ...prev, currentDebt: true }));
+      }
+    } catch (error) {
+      console.error("Error al calcular deuda actual:", error);
+    }
+  };
+
+  const calculateApplicationAge = async () => {
+    try {
+      const result = await checkrulesService.calculateApplicationAge(creditID);
+      if (result.data) {
+        setCalculatedChecks((prev) => ({ ...prev, applicationAge: true }));
+      }
+    } catch (error) {
+      console.error("Error al calcular edad de postulación:", error);
+    }
+  };
+
+  const toggleCheck = (checkName) => {
+    setEvaluationData((prevData) => ({
+      ...prevData,
+      [checkName]: !prevData[checkName],
+    }));
+  };
 
   const handleEvaluation = async () => {
     try {
@@ -72,70 +115,63 @@ const CreditEvaluationP2 = () => {
       const checkRulesResponse = await checkrulesService.getById(checkid);
       const creditResponse = await creditService.getByID(creditID);
       const checkRulesEntity = checkRulesResponse.data;
-      const creditEntity = creditResponse.data;
   
-      let observations = ""; // Para acumular las observaciones
-  
-      // Verifica las reglas críticas y acumula observaciones para cada regla falsa
+      // Reglas críticas
       const criticalRules = {
-        rule1: "antigüedad laboral y estabilidad",
-        rule2: "saldo mínimo requerido",
-        rule3: "historial de ahorro consistente",
-        rule4: "depósitos periódicos",
-        rule6: "retiros recientes",
+        rule1: "relación cuota/ingreso",
+        rule2: "historial crediticio del cliente",
+        rule3: "antigüedad laboral y estabilidad",
+        rule4: "relación deuda/ingreso",
+        rule6: "edad del solicitante",
       };
   
-      let criticalRulesPassed = true;
+      let criticalObservation = "";
       for (const [rule, description] of Object.entries(criticalRules)) {
         if (!checkRulesEntity[rule]) {
-          observations += `Se rechazó la solicitud por no cumplir con la ${description}. `;
-          criticalRulesPassed = false;
+          criticalObservation = `Se rechazó la solicitud por no cumplir con ${description}.`;
+          break;
         }
       }
   
-      // Si alguna regla crítica no se cumple, rechaza automáticamente
-      if (!criticalRulesPassed) {
+      if (criticalObservation) {
         await creditService.updateStatus(creditID, "E7_RECHAZADA");
-        await creditService.updateObservations(creditID, observations);
-        alert("El crédito ha sido rechazado. Motivos: " + observations);
+        await creditService.updateObservations(creditID, criticalObservation);
+        alert("El crédito ha sido rechazado. Motivo: " + criticalObservation);
         return;
       }
   
-      // Si todas las reglas críticas son `true`, verifica las opcionales
+      // Reglas opcionales
       const optionalRules = {
-        rule71: "requisito opcional 1",
-        rule72: "requisito opcional 2",
-        rule73: "requisito opcional 3",
-        rule74: "requisito opcional 4",
-        rule75: "requisito opcional 5",
+        rule71: "saldo mínimo requerido",
+        rule72: "historial de ahorro consistente",
+        rule73: "depósitos periódicos",
+        rule74: "relación saldo/años de antigüedad",
+        rule75: "retiros recientes",
       };
   
-      const optionalRulesPassedCount = Object.entries(optionalRules)
-        .filter(([rule, description]) => {
-          if (!checkRulesEntity[rule]) {
-            observations += `Se rechazó la solicitud por no cumplir con el ${description}. `;
-            return false;
-          }
-          return true;
-        })
-        .length;
+      const failedOptionalRules = Object.entries(optionalRules).filter(
+        ([rule]) => !checkRulesEntity[rule]
+      );
   
-      if (optionalRulesPassedCount === 5) {
-        // Todas las reglas (críticas y opcionales) son `true`, cambia a `E4_PRE_APROBADA`
+      const failedOptionalRulesCount = failedOptionalRules.length;
+      let optionalObservation = "";
+  
+      if (failedOptionalRulesCount > 0) {
+        optionalObservation = `El crédito no cumplió con ${failedOptionalRulesCount} reglas opcionales.`;
+      }
+  
+      if (failedOptionalRulesCount === 0) {
         await creditService.updateStatus(creditID, "E4_PRE_APROBADA");
-        observations = "";
-        await creditService.updateObservations(creditID, observations);
+        await creditService.updateObservations(creditID, "");
         alert("El crédito ha sido pre-aprobado.");
-      } else if (optionalRulesPassedCount >= 3 && optionalRulesPassedCount <= 4) {
-        // Si cumple con 3 o 4 de las 5 reglas opcionales, cambia a `E2_PENDIENTE_DOCUMENTACION`
+      } else if (failedOptionalRulesCount <= 2) {
         await creditService.updateStatus(creditID, "E2_PENDIENTE_DOCUMENTACION");
-        await creditService.updateObservations(creditID, observations);
+        await creditService.updateObservations(creditID, optionalObservation);
         alert("El crédito está pendiente de documentación adicional.");
       } else {
-        // Si cumple con menos de 3 de las 5 reglas opcionales, rechaza
         await creditService.updateStatus(creditID, "E7_RECHAZADA");
-        await creditService.updateObservations(creditID, observations);
-        alert("El crédito ha sido rechazado debido a reglas opcionales insuficientes. Motivos: " + observations);
+        await creditService.updateObservations(creditID, optionalObservation);
+        alert("El crédito ha sido rechazado. Motivo: " + optionalObservation);
       }
   
       if (result.success) {
@@ -147,8 +183,8 @@ const CreditEvaluationP2 = () => {
       console.error("Error en la evaluación de crédito:", error);
       alert('Error al enviar la evaluación');
     }
-  };  
-  
+  };
+
   return (
     <div className="credit-evaluation-container">
       <h2>Evaluación de Crédito</h2>
@@ -158,39 +194,71 @@ const CreditEvaluationP2 = () => {
       </button>
 
       <div className="credit-evaluation">
-        <div className="rule">
-          <p>Historial Crediticio</p>
-          <button className="btn-green" onClick={() => updateCheck('creditHistoryCheck')}>Cumple</button>
-        </div>
+        {[
+          { label: "Historial Crediticio", key: "creditHistoryCheck" },
+          { label: "Antigüedad Laboral y Estabilidad", key: "employmentStabilityCheck" },
+          { label: "Saldo Mínimo Requerido", key: "minimumBalanceCheck" },
+          { label: "Historial de Ahorro Consistente", key: "savingHistoryCheck" },
+          { label: "Depósitos Periódicos", key: "periodicDepositsCheck" },
+          { label: "Relación Saldo/Años Antigüedad", key: "balanceYearsAgoCheck" },
+          { label: "Retiros Recientes", key: "recentWithdrawalsCheck" },
+        ].map(({ label, key }) => (
+          <div className="rule" key={key}>
+            <p>{label}</p>
+            <label className="checkbox-container">
+              <input
+                type="checkbox"
+                checked={evaluationData[key]}
+                onChange={() => toggleCheck(key)}
+              />
+              <span className="checkmark"></span>
+            </label>
+          </div>
+        ))}
 
-        <div className="rule">
-          <p>Antigüedad Laboral y Estabilidad</p>
-          <button className="btn-green" onClick={() => updateCheck('employmentStabilityCheck')}>Cumple</button>
-        </div>
-
-        <div className="rule">
-          <p>Saldo Mínimo Requerido</p>
-          <button className="btn-green" onClick={() => updateCheck('minimumBalanceCheck')}>Cumple</button>
-        </div>
-
-        <div className="rule">
-          <p>Historial de Ahorro Consistente</p>
-          <button className="btn-green" onClick={() => updateCheck('savingHistoryCheck')}>Cumple</button>
-        </div>
-
-        <div className="rule">
-          <p>Depósitos Periódicos</p>
-          <button className="btn-green" onClick={() => updateCheck('periodicDepositsCheck')}>Cumple</button>
-        </div>
-
-        <div className="rule">
-          <p>Relación Saldo/Años Antigüedad</p>
-          <button className="btn-green" onClick={() => updateCheck('balanceYearsAgoCheck')}>Cumple</button>
-        </div>
-
-        <div className="rule">
-          <p>Retiros Recientes</p>
-          <button className="btn-green" onClick={() => updateCheck('recentWithdrawalsCheck')}>Cumple</button>
+        {/* Nuevas verificaciones con botón Calcular */}
+        <div className="additional-verifications">
+          {[
+            {
+              label: "Relación Cuota/Ingreso",
+              key: "quoteIncomeRatioCheck",
+              onClick: calculateQuotaIncome,
+              calculatedKey: "installmentIncomeRatio",
+            },
+            {
+              label: "Deuda Actual",
+              key: "currentDebtCheck",
+              onClick: calculateDebtIncome,
+              calculatedKey: "currentDebt",
+            },
+            {
+              label: "Edad de Postulación",
+              key: "applicantAgeCheck",
+              onClick: calculateApplicationAge,
+              calculatedKey: "applicationAge",
+            },
+          ].map(({ label, key, onClick, calculatedKey }) => (
+            <div className="verification-item" key={key}>
+              <p>{label}</p>
+              <div className="verification-controls">
+                <button
+                  className={calculatedChecks[calculatedKey] ? "btn-calculate-success" : "btn-calculate"}
+                  onClick={onClick}
+                  disabled={calculatedChecks[calculatedKey]}
+                >
+                  Calcular
+                </button>
+                <label className="checkbox-container">
+                  <input
+                    type="checkbox"
+                    checked={evaluationData[key]}
+                    onChange={() => toggleCheck(key)}
+                  />
+                  <span className="checkmark"></span>
+                </label>
+              </div>
+            </div>
+          ))}
         </div>
 
         <button onClick={handleEvaluation} className="btn-submit">Enviar Evaluación</button>

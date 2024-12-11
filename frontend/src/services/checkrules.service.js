@@ -16,13 +16,25 @@ const getByCreditID = creditID => {
     return httpClient.get(`/checkrules/credit/${creditID}`)
 }
 
+const calculateQuotaIncome = async (checkID) => {
+    return httpClient.post(`/checkrules/check1/${checkID}/calculate`);
+}
+
+const calculateDebtIncome = async (checkID, currentDebt) => {
+    return httpClient.post(`/checkrules/check4/${checkID}/${currentDebt}`);
+}
+
+const calculateApplicationAge = async (checkID) => {
+    return httpClient.post(`/checkrules/check6/${checkID}`);
+}
+
 const creditEvaluation = async (checkId, evaluationData) => {
     try {
-        await httpClient.post(`/checkrules/check1/${checkId}`);
+        await httpClient.post(`/checkrules/check1/${checkId}/${evaluationData.quoteIncomeRatioCheck}`);
         await httpClient.post(`/checkrules/check2/${checkId}/${evaluationData.creditHistoryCheck}`);
         await httpClient.post(`/checkrules/check3/${checkId}/${evaluationData.employmentStabilityCheck}`);
-        await httpClient.post(`/checkrules/check4/${checkId}/${evaluationData.currentDebt}`);
-        await httpClient.post(`/checkrules/check6/${checkId}`);
+        await httpClient.post(`/checkrules/check4/${checkId}/${evaluationData.currentDebtCheck}`);
+        await httpClient.post(`/checkrules/check6/${checkId}/${evaluationData.applicantAgeCheck}`);
         await httpClient.post(`/checkrules/check71/${checkId}/${evaluationData.minimumBalanceCheck}`);
         await httpClient.post(`/checkrules/check72/${checkId}/${evaluationData.savingHistoryCheck}`);
         await httpClient.post(`/checkrules/check73/${checkId}/${evaluationData.periodicDepositsCheck}`);
@@ -41,6 +53,9 @@ export default {
     createEvaluation,
     getAll,
     getById,
+    calculateQuotaIncome,
+    calculateDebtIncome,
+    calculateApplicationAge,
     creditEvaluation,
     getByCreditID
 };

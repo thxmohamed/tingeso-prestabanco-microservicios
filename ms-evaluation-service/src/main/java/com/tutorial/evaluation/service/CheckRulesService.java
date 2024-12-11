@@ -43,7 +43,7 @@ public class CheckRulesService {
         return check.orElse(null);
     }
     @Transactional
-    public void checkRelationQuotaIncome(Long checkid) {
+    public Boolean checkRelationQuotaIncome(Long checkid) {
         Optional<CheckRulesEntity> checkRulesOpt = checkRulesRepository.findById(checkid);
         if (checkRulesOpt.isPresent()) {
             CheckRulesEntity checkRules = checkRulesOpt.get();
@@ -53,12 +53,21 @@ public class CheckRulesService {
                 CreditModel credit = creditOpt.get();
                 UserModel user = userOpt.get();
                 double income = user.getIncome();
-                boolean result = (credit.getMonthlyFee() / income) * 100 <= 35;
-                checkRulesRepository.updateRule1(checkid, result);
+                return (credit.getMonthlyFee() / income) * 100 <= 35;
             } else {
                 throw new EntityNotFoundException("CreditEntity no encontrado con ID: " + checkRules.getCreditID());
             }
         } else {
+            throw new EntityNotFoundException("CheckRulesEntity no encontrado con ID: " + checkid);
+        }
+    }
+
+    @Transactional
+    public void updateRule1(Long checkid, boolean check){
+        Optional<CheckRulesEntity> checkRule = checkRulesRepository.findById(checkid);
+        if (checkRule.isPresent()) {
+            checkRulesRepository.updateRule1(checkid, check);
+        }else {
             throw new EntityNotFoundException("CheckRulesEntity no encontrado con ID: " + checkid);
         }
     }
@@ -83,7 +92,7 @@ public class CheckRulesService {
         }
     }
     @Transactional
-    public void checkDebtIncome(Long checkid, double currentDebt){
+    public boolean checkDebtIncome(Long checkid, double currentDebt){
         Optional<CheckRulesEntity> checkRulesOpt = checkRulesRepository.findById(checkid);
         if(checkRulesOpt.isPresent()){
             CheckRulesEntity checkRules = checkRulesOpt.get();
@@ -93,8 +102,7 @@ public class CheckRulesService {
                 CreditModel credit = creditOpt.get();
                 UserModel user = userOpt.get();
                 double totalDebt = credit.getMonthlyFee() + currentDebt;
-                boolean check = totalDebt/user.getIncome() <= 0.5;
-                checkRulesRepository.updateRule4(checkid, check);
+                return totalDebt/user.getIncome() <= 0.5;
             }else{
                 throw new EntityNotFoundException("User o Credit no encontrado");
             }
@@ -104,7 +112,17 @@ public class CheckRulesService {
     }
 
     @Transactional
-    public void checkApplicantAge(Long checkid){
+    public void updateRule4(Long checkid, boolean check){
+        Optional<CheckRulesEntity> checkRules = checkRulesRepository.findById(checkid);
+        if(checkRules.isPresent()){
+            checkRulesRepository.updateRule4(checkid, check);
+        }else {
+            throw new EntityNotFoundException("CheckRulesEntity no encontrado con ID: " + checkid);
+        }
+    }
+
+    @Transactional
+    public boolean checkApplicantAge(Long checkid){
         Optional<CheckRulesEntity> checkRulesOpt = checkRulesRepository.findById(checkid);
         if(checkRulesOpt.isPresent()){
             CheckRulesEntity checkRules = checkRulesOpt.get();
@@ -114,9 +132,21 @@ public class CheckRulesService {
                 UserModel user = userOpt.get();
                 CreditModel credit = creditOpt.get();
                 int finalAge = credit.getYearsLimit() + user.getAge();
-                boolean result = finalAge < 70;
-                checkRulesRepository.updateRule6(checkid, result);
+                return finalAge < 70;
             }
+        }else {
+            throw new EntityNotFoundException("CheckRulesEntity no encontrado con ID: " + checkid);
+        }
+        return false;
+    }
+
+    @Transactional
+    public void updateRule6(Long checkid, boolean check) {
+        Optional<CheckRulesEntity> checkRules = checkRulesRepository.findById(checkid);
+        if(checkRules.isPresent()){
+            checkRulesRepository.updateRule6(checkid, check);
+        }else {
+            throw new EntityNotFoundException("CheckRulesEntity no encontrado con ID: " + checkid);
         }
     }
 

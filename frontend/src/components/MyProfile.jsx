@@ -37,10 +37,19 @@ const MyProfile = () => {
           <strong>Apellido:</strong> {user.lastName}
         </div>
         <div className="profile-item">
+          <strong>Rut:</strong> {user.rut}
+        </div>
+        <div className="profile-item">
           <strong>Correo:</strong> {user.email}
         </div>
         <div className="profile-item">
           <strong>Rol:</strong> {user.rol}
+        </div>
+        <div className="profile-item">
+          <strong>Salario:</strong> $ {user.income}
+        </div>
+        <div className="profile-item">
+          <strong>Edad:</strong> {user.age}
         </div>
       </div>
       <button className="go-back-button" onClick={handleBack}>

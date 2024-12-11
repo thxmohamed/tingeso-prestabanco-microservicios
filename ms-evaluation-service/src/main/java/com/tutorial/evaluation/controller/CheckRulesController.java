@@ -37,9 +37,16 @@ public class CheckRulesController {
         CheckRulesEntity check = checkRulesService.getById(id);
         return ResponseEntity.ok(check);
     }
-    @PostMapping("/check1/{checkid}")
-    public ResponseEntity<CheckRulesEntity> checkRelationQuotaIncome(@PathVariable Long checkid) {
-        checkRulesService.checkRelationQuotaIncome(checkid);
+
+    @PostMapping("/check1/{checkid}/calculate")
+    public ResponseEntity<Boolean> calculateQuotaIncome(@PathVariable Long checkid){
+        boolean check = checkRulesService.checkRelationQuotaIncome(checkid);
+        return ResponseEntity.ok(check);
+    }
+
+    @PostMapping("/check1/{checkid}/{request}")
+    public ResponseEntity<CheckRulesEntity> checkRelationQuotaIncome(@PathVariable Long checkid, @PathVariable boolean request) {
+        checkRulesService.updateRule1(checkid, request);
         CheckRulesEntity result = checkRulesService.getById(checkid);
         return ResponseEntity.ok(result);
     }
@@ -69,24 +76,45 @@ public class CheckRulesController {
         }
     }
 
-    @PostMapping("/check4/{checkid}/{currentDebt}")
-    public ResponseEntity<CheckRulesEntity> checkDebtIncome(@PathVariable Long checkid, @PathVariable double currentDebt) {
+    @PostMapping("/check4/{checkid}/calculate/{currentDebt}")
+    public ResponseEntity<Boolean> calculateDebtIncome(@PathVariable Long checkid, @PathVariable double currentDebt){
         try {
-            checkRulesService.checkDebtIncome(checkid, currentDebt);
-            CheckRulesEntity result = checkRulesService.getById(checkid);
+            boolean result = checkRulesService.checkDebtIncome(checkid, currentDebt);
             return ResponseEntity.ok(result);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
 
-    @PostMapping("/check6/{checkid}")
-    public ResponseEntity<CheckRulesEntity> checkApplicantAge(@PathVariable Long checkid) {
-        try {
-            checkRulesService.checkApplicantAge(checkid);
+
+    @PostMapping("/check4/{checkid}/{request}")
+    public ResponseEntity<CheckRulesEntity> checkDebtIncome(@PathVariable Long checkid, @PathVariable boolean request) {
+        try{
+            checkRulesService.updateRule4(checkid, request);
             CheckRulesEntity result = checkRulesService.getById(checkid);
             return ResponseEntity.ok(result);
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+
+    @PostMapping("/check6/{checkid}")
+    public ResponseEntity<Boolean> checkApplicantAge(@PathVariable Long checkid) {
+        try {
+            boolean result = checkRulesService.checkApplicantAge(checkid);
+            return ResponseEntity.ok(result);
         } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+
+    @PostMapping("check6/{checkid}/{request}")
+    public ResponseEntity<CheckRulesEntity> updateRule6(@PathVariable Long checkid, @PathVariable boolean request) {
+        try{
+            checkRulesService.updateRule6(checkid, request);
+            CheckRulesEntity result = checkRulesService.getById(checkid);
+            return ResponseEntity.ok(result);
+        }catch (Exception e){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }

@@ -9,7 +9,7 @@ const save = data => {
 }
 
 const getByClientID = id => {
-    return httpClient.get(`/request/credit/${id}`)
+    return httpClient.get(`/track/byuser/${id}`)
 }
 
 const getByID = id => {

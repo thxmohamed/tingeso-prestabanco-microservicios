@@ -467,3 +467,121 @@ label {
 .button:hover {
   background-color: hsl(102, 72%, 74%);
 }
+
+.checkbox-container {
+  display: inline-block;
+  position: relative;
+  cursor: pointer;
+  width: 20px;
+  height: 20px;
+}
+
+.checkbox-container input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 20px;
+  width: 20px;
+  background-color: #ccc;
+  border: 1px solid #999;
+  border-radius: 3px;
+}
+
+.checkbox-container input:checked ~ .checkmark {
+  background-color: #4caf50; /* Verde para marcado */
+}
+
+.checkbox-container input:checked ~ .checkmark:after {
+  content: "";
+  position: absolute;
+  left: 6px;
+  top: 2px;
+  width: 6px;
+  height: 12px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.checkbox-container input:not(:checked) ~ .checkmark:after {
+  content: "";
+  position: absolute;
+  left: 6px;
+  top: 6px;
+  width: 10px;
+  height: 2px;
+  background-color: white;
+  transform: rotate(45deg);
+}
+.additional-verifications {
+  margin-top: 20px;
+  padding: 10px;
+  border-top: 1px solid #ccc;
+}
+
+.verification-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  padding: 10px 0;
+  border-bottom: 1px solid #eaeaea;
+}
+
+.verification-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.btn-calculate {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 5px 10px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.btn-calculate-success {
+  background-color: #01ff3c;
+}
+
+.btn-calculate:hover {
+  background-color: #0056b3;
+}
+
+.btn-calculate-success:hover {
+  background-color: #b6f3c2;
+}
+
+
+/* Margen adicional para separar las secciones */
+.credit-evaluation-container h2 {
+  margin-bottom: 20px;
+}
+
+.credit-evaluation {
+  margin-top: 10px;
+}
+
+.credit-evaluation-container .btn-submit {
+  margin-top: 20px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.credit-evaluation-container .btn-submit:hover {
+  background-color: #218838;
+}
